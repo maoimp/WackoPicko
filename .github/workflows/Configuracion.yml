@@ -1,0 +1,25 @@
+name: Fluid Attacks Skims CI
+
+on:
+  push:
+    branches: [main]      # ajusta si usas otra rama por defecto
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  skims:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4   # versión fija y mantenida
+
+      # El contenedor de Skims se ejecuta como un step “docker://…”
+      - name: Run Skims scan (strict)
+        uses: docker://docker.io/fluidattacks/skims:latest
+        with:
+          # --strict → termina con exit 1 si encuentra vulnerabilidades
+          args: skims --strict scan ./.fluidattacks/skims-config.yml
